@@ -1,8 +1,9 @@
 package MovieViewer;
 
+import Events.*;
 import MachineStateInterface.MachineState;
 
-public class AMovieViewer implements MachineState {
+public class AMovieViewer implements MachineState , ViewerEventHandler {
 
     private MachineState currentState ;
 
@@ -12,6 +13,11 @@ public class AMovieViewer implements MachineState {
         enterState();
     }
 
+    private void changeState(MachineState state){
+        exitState();
+        this.currentState = state ;
+        enterState();
+    }
 
     @Override
     public void enterState() {
@@ -26,5 +32,27 @@ public class AMovieViewer implements MachineState {
     @Override
     public void runState() {
         this.currentState.runState();
+    }
+
+
+    @Override
+    public void handleMovieOnEvent(EventMovieOn event) {
+        if(!(currentState instanceof ViewerStateIDle))
+            return ;
+
+        changeState(new ViewerStatePlay());
+    }
+
+    @Override
+    public void handleMoviePauseEvent(EventMoviePause event) {
+        if(!(currentState instanceof ViewerStatePlay))
+            return;
+
+        changeState(new ViewerStatePause());
+    }
+
+    @Override
+    public void handleMovieIdleEvent(EventMovieIdle event) {
+        changeState(new ViewerStateIDle());
     }
 }
