@@ -1,8 +1,6 @@
 package Events;
 
-public class MachineEvent implements EventMovieOn , EventMoviePause , EventMovieIdle{
+public interface MachineEvent{
 
-    public MachineEvent(){
 
-    }
 }

@@ -1,6 +1,6 @@
 package Events;
 
-public interface EventsHandler {
+public class EventsHandler implements MachineEvent{
 
-    void handleEvent(MachineEvent event);
+
 }

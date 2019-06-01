@@ -1,15 +1,19 @@
 package MovieViewer;
 
+import Connections.Connections;
 import Events.*;
 import MachineStateInterface.MachineState;
 
-public class AMovieViewer implements MachineState , ViewerEventHandler {
+import java.util.Observable;
+import java.util.Observer;
+
+public class AMovieViewer implements MachineState , ViewerEventHandler , Observer {
 
     private MachineState currentState ;
+    private ViewerStatePlay moviePlaying;
 
-    public AMovieViewer()
-    {
-        this.currentState = (MachineState) new ViewerStateIDle();
+    public AMovieViewer() {
+        this.currentState = new ViewerStateIDle();
         enterState();
     }
 
@@ -34,25 +38,73 @@ public class AMovieViewer implements MachineState , ViewerEventHandler {
         this.currentState.runState();
     }
 
-
     @Override
-    public void handleMovieOnEvent(EventMovieOn event) {
-        if(!(currentState instanceof ViewerStateIDle))
-            return ;
+    public void update(Observable o, Object arg) {
 
-        changeState(new ViewerStatePlay());
     }
 
     @Override
-    public void handleMoviePauseEvent(EventMoviePause event) {
+    public void handleEvent(MachineEvent event) {
+        if(event instanceof EventMovieOn)
+            handleMovieOnEvent() ;
+        else if(event instanceof EventHoldMovie)
+            handleMoviePauseEvent();
+        else if(event instanceof EventMovieRestart)
+            handleMovieRestartEvent();
+        else if(event instanceof EventResume)
+            handleMovieResumeEvent();
+        else if(event instanceof EventDownloadError)
+            handleDownloadErrorEvent();
+        else if(event instanceof EventMovieOff)
+            handleMovieOffEvent();
+    }
+
+
+    private void handleMovieOnEvent() {
+        if(!(currentState instanceof ViewerStateIDle))
+            return ;
+
+        moviePlaying = new ViewerStatePlay();
+        changeState(moviePlaying);
+
+    }
+
+    private void handleMoviePauseEvent() {
         if(!(currentState instanceof ViewerStatePlay))
             return;
 
         changeState(new ViewerStatePause());
     }
 
-    @Override
-    public void handleMovieIdleEvent(EventMovieIdle event) {
+
+    private void handleMovieRestartEvent() {
+        if(!(currentState instanceof ViewerStatePlay))
+            return;
+
+        ((ViewerStatePlay)currentState).setTimeInMovie(0);
+    }
+
+    private void handleMovieResumeEvent () {
+        if(!(currentState instanceof ViewerStatePause))
+            return;
+
+        changeState(this.moviePlaying);
+    }
+
+
+    private void handleDownloadErrorEvent() {
+        if(!(currentState instanceof ViewerStatePlay))
+            return;
+
+        changeState(new ViewerStatePause());
+    }
+
+
+    private void handleMovieOffEvent() {
         changeState(new ViewerStateIDle());
     }
+
+
+
+
 }

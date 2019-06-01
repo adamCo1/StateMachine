@@ -1,13 +1,14 @@
 package Machine;
 
 import Connections.Connections;
+import Events.EventHoldMovie;
 import Events.EventMovieOn;
-import Events.EventMoviePause;
+
 import Events.MachineEvent;
 import MachineStateInterface.MachineState;
 import MovieDownloader.AMovieDownloader;
 import MovieViewer.AMovieViewer;
-import MovieViewer.MovieViewerState;
+
 import User.User;
 
 import java.util.ArrayList;
@@ -63,8 +64,8 @@ public class Client {
             t2 = System.currentTimeMillis();
         }
 
-        EventMovieOn movieOn = new MachineEvent() ;
-        ((AMovieViewer)states.get(3)).handleMovieOnEvent(movieOn);
+        MachineEvent movieOn = new EventMovieOn() ;
+        ((AMovieViewer)states.get(3)).handleEvent(movieOn);
 
         t1 = System.currentTimeMillis();
         t2 = t1;
@@ -72,8 +73,8 @@ public class Client {
             t2 = System.currentTimeMillis();
         }
 
-        EventMoviePause moviePause = new MachineEvent() ;
-        ((AMovieViewer)states.get(3)).handleMoviePauseEvent(moviePause);
+        MachineEvent moviePause = new EventHoldMovie();
+        ((AMovieViewer)states.get(3)).handleEvent(moviePause);
 
     }
 

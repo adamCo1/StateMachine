@@ -1,4 +1,4 @@
 package Events;
 
-public interface EventMovieOn {
+public class EventMovieOn implements MachineEvent{
 }

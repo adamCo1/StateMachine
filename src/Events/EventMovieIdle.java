@@ -1,4 +1,4 @@
 package Events;
 
-public interface EventMovieIdle {
+public class EventMovieIdle implements MachineEvent{
 }
