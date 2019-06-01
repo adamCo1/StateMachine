@@ -23,9 +23,48 @@ public class Client {
         machine.add(user);
         machine.add(movieDownloader);
         machine.add(movieViewer);
+
+        Machine stateMachine = new Machine(machine);
+
+        try {
+            Thread machineThread = new Thread(() -> runMachine(stateMachine));
+            machineThread.run();
+
+            Thread clientThread = new Thread(() -> runClient());
+            clientThread.run();
+
+            clientThread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
-    private static void runMachine(){
+
+    private static void runClient(){
+
+    }
+
+
+    private static void runMachine(Machine stateMachine){
+
+        final int TICK_PERIOD = 1000 ;
+        boolean ticked = false;
+        long t1 = 0 , t2 ;
+
+        while(true){
+            if(ticked) {
+                t1 = System.currentTimeMillis();
+                ticked = false ;
+            }
+
+            t2 = System.currentTimeMillis();
+
+            if(t2 - t1 >= TICK_PERIOD){//tick
+                stateMachine.runState();
+                ticked = true ;
+            }
+
+        }
 
     }
 

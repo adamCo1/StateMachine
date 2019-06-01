@@ -10,6 +10,7 @@ public class MachineStateOn implements MachineState {
     private ArrayList<MachineState> states ;
 
     public MachineStateOn(ArrayList<MachineState> states){
+        this.states = new ArrayList<>();
         this.states.addAll(states) ;
     }
 
